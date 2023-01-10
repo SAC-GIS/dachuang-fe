@@ -2,8 +2,8 @@
 	<!-- 热门板块 -->
 	<div class="echarts-header">
 		<span>排名</span>
-		<span>景区</span>
-		<span>预约数量</span>
+		<span>省份</span>
+		<span>确诊数量</span>
 	</div>
 	<div class="echarts" id="HotPlateChart"></div>
 </template>
@@ -19,8 +19,9 @@ interface ChartProp {
 	percentage: string;
 	maxValue: number;
 }
-const initChart = (data: any = {}): ECharts => {
+const initChart = (datad: any = {}): ECharts => {
 	const charEle = document.getElementById("HotPlateChart") as HTMLElement;
+	const datas = [100, 200, 300, 400, 500];
 	const charEch: ECharts = init(charEle);
 	const option: EChartsOption = {
 		grid: {
@@ -56,7 +57,7 @@ const initChart = (data: any = {}): ECharts => {
 		yAxis: [
 			{
 				show: true,
-				data: data.data.map((val: ChartProp) => val.name),
+				data: ["上海", "广州", "天津", "浙江", "甘肃"],
 				inverse: true,
 				axisLine: {
 					show: false
@@ -71,7 +72,7 @@ const initChart = (data: any = {}): ECharts => {
 					color: "#fff",
 					formatter: function (value: any) {
 						let str = value.length > 6 ? value.slice(0, 6) + "..." : value;
-						let index = data.data.map((item: ChartProp) => item.name).indexOf(value) + 1;
+						let index = datad.data.map((item: ChartProp) => item.name).indexOf(value) + 1;
 						return ["{" + (index > 3 ? "lg" : "lg" + index) + "|NO." + index + "}", "{title|" + str + "}"].join(" ");
 					},
 					rich: {
@@ -130,7 +131,7 @@ const initChart = (data: any = {}): ECharts => {
 			{
 				show: true,
 				inverse: true,
-				data: data.data,
+				data: datad.data,
 				axisLabel: {
 					fontSize: 14,
 					color: "#fff",
@@ -157,22 +158,20 @@ const initChart = (data: any = {}): ECharts => {
 				name: "条",
 				type: "bar",
 				yAxisIndex: 0,
-				data: data.data,
+				data: datas,
 				barWidth: 12,
 				itemStyle: {
 					borderRadius: 30,
-					color: function (params) {
-						let num = data.colors.length;
-						return data.colors[params.dataIndex % num];
-					}
+					color: "#00FFFF"
 				},
 				label: {
 					show: true,
 					position: [12, 0],
 					lineHeight: 14,
-					color: "#fff",
+					color: "black",
+					fontSize: "20px",
 					formatter: (params: any) => {
-						return params.data.percentage;
+						return params.data.number;
 					}
 				}
 			},
@@ -180,15 +179,15 @@ const initChart = (data: any = {}): ECharts => {
 				name: "框",
 				type: "bar",
 				yAxisIndex: 1,
-				data: data.data.map((val: ChartProp) => {
-					if (!val.maxValue) {
-						return 5;
-					}
-					return val.maxValue;
-				}),
+				// data: datad.data.map((val: ChartProp) => {
+				// 	if (!val.maxValue) {
+				// 		return 5;
+				// 	}
+				// 	return val.maxValue;
+				// }),
 				barWidth: 18,
 				itemStyle: {
-					color: "none",
+					color: "#00FFFF",
 					borderColor: "#00c1de",
 					borderWidth: 1,
 					borderRadius: 15

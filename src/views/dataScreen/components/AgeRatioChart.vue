@@ -1,5 +1,5 @@
 <template>
-	<!-- 年龄比例 -->
+	<!-- 重症病例top -->
 	<div class="echarts" id="AgeRatioChart"></div>
 </template>
 
@@ -7,115 +7,137 @@
 // Echarts 为init（dom元素后的类型）
 // EChartsOption 为 option 的类型
 import { ECharts, EChartsOption, init } from "echarts";
-interface ChartProp {
-	value: string;
-	name: string;
-	percentage: string;
-}
-const initChart = (data: any): ECharts => {
+const initChart = (): ECharts => {
 	const charEle = document.getElementById("AgeRatioChart") as HTMLElement;
 	const charEch: ECharts = init(charEle);
 	/* echarts colors */
-	const colors = ["#F6C95C", "#EF7D33", "#1F9393", "#184EA1", "#81C8EF", "#9270CA"];
 	const option: EChartsOption = {
-		color: colors,
-		tooltip: {
-			show: true,
-			trigger: "item",
-			formatter: "{b} <br/>占比：{d}%"
-		},
-		legend: {
-			orient: "vertical",
-			right: "20px",
-			top: "15px",
-			itemGap: 15,
-			itemWidth: 14,
-			formatter: function (name) {
-				let text = "";
-				data.forEach((val: ChartProp) => {
-					if (val.name === name) {
-						text = " " + name + "　 " + val.percentage;
-					}
-				});
-				return text;
-			},
+		title: {
+			text: "2023年重症病例统计表",
 			textStyle: {
-				color: "#fff"
+				align: "center",
+				color: "#fff",
+				fontSize: 25
+			},
+			top: "3%",
+			left: "10%"
+		},
+		// backgroundColor: "#0f375f",
+		grid: {
+			top: "25%",
+			bottom: "10%" //也可设置left和right设置距离来控制图表的大小
+		},
+		tooltip: {
+			trigger: "axis",
+			axisPointer: {
+				type: "shadow",
+				label: {
+					show: true
+				}
 			}
 		},
-		grid: {
-			top: "bottom",
-			left: 10,
-			bottom: 10
+		legend: {
+			// data: ["销售水量", "主营业务"],
+			top: "15%",
+			textStyle: {
+				color: "#ffffff"
+			}
 		},
-		series: [
+		xAxis: {
+			data: ["2022.7", "2022.8", "2022.9", "2022.10", "2022.11", "2022.12", "2023.1", "2023.2"],
+			axisLine: {
+				show: true, //隐藏X轴轴线
+				lineStyle: {
+					color: "#01FCE3"
+				}
+			},
+			axisTick: {
+				show: true //隐藏X轴刻度
+			},
+			axisLabel: {
+				show: true,
+				color: "#ebf8ac" //X轴文字颜色
+			}
+		},
+		yAxis: [
 			{
-				zlevel: 1,
-				name: "年龄比例",
-				type: "pie",
-				selectedMode: "single",
-				radius: [50, 90],
-				center: ["35%", "50%"],
-				startAngle: 60,
-				// hoverAnimation: false,
-				label: {
-					position: "inside",
+				type: "value",
+				name: "数量",
+				nameTextStyle: {
+					color: "#ebf8ac"
+				},
+				splitLine: {
+					show: false
+				},
+				axisTick: {
+					show: true
+				},
+				axisLine: {
 					show: true,
-					color: "#fff",
-					formatter: function (params: any) {
-						return params.data.percentage;
-					},
-					rich: {
-						b: {
-							fontSize: 16,
-							lineHeight: 30,
-							color: "#fff"
-						}
+					lineStyle: {
+						color: "#FFFFFF"
 					}
 				},
-				itemStyle: {
-					shadowColor: "rgba(0, 0, 0, 0.2)",
-					shadowBlur: 10
-				},
-				data: data.map((val: ChartProp, index: number) => {
-					return {
-						value: val.value,
-						name: val.name,
-						percentage: val.percentage,
-						itemStyle: {
-							borderWidth: 10,
-							shadowBlur: 20,
-							borderColor: colors[index],
-							borderRadius: 10
-						}
-					};
-				})
+				axisLabel: {
+					show: true,
+					color: "#ebf8ac"
+				}
 			},
 			{
-				name: "",
-				type: "pie",
-				selectedMode: "single",
-				radius: [50, 90],
-				center: ["35%", "50%"],
-				startAngle: 60,
-				data: [
-					{
-						value: 1000,
-						name: "",
-						label: {
-							show: true,
-							formatter: "{a|本日总数}",
-							rich: {
-								a: {
-									align: "center",
-									color: "rgb(98,137,169)",
-									fontSize: 14
-								}
-							},
-							position: "center"
-						}
+				type: "value",
+				//   name: "同比",
+				nameTextStyle: {
+					color: "#ebf8ac"
+				},
+				position: "right",
+				splitLine: {
+					show: false
+				},
+				axisTick: {
+					show: false
+				},
+				axisLine: {
+					show: false
+				},
+				axisLabel: {
+					show: true,
+					formatter: "{value} %", //右侧Y轴文字显示
+					color: "#ebf8ac"
+				}
+			},
+			{
+				type: "value",
+				gridIndex: 0,
+				min: 50,
+				max: 100,
+				splitNumber: 8,
+				splitLine: {
+					show: false
+				},
+				axisLine: {
+					show: false
+				},
+				axisTick: {
+					show: false
+				},
+				axisLabel: {
+					show: false
+				},
+				splitArea: {
+					show: true,
+					areaStyle: {
+						color: ["rgba(250,250,250,0.0)", "rgba(250,250,250,0.05)"]
 					}
-				]
+				}
+			}
+		],
+		series: [
+			{
+				//   name: "主营业务",
+				color: "#66FFCC",
+				type: "bar",
+				barWidth: 15,
+				data: [100, 245, 456, 300, 600, 800, 1100, 1200]
 			}
 		]
 	};

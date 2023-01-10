@@ -3,12 +3,12 @@
 		<div class="dataScreen" ref="dataScreenRef">
 			<div class="dataScreen-header">
 				<div class="header-lf">
-					<span class="header-screening" @click="handleTo">首页</span>
+					<!-- <span class="header-screening" @click="handleTo">首页</span> -->
 				</div>
 				<div class="header-ct">
 					<div class="header-ct-title">
-						<span>智慧旅游可视化大数据展示平台</span>
-						<div class="header-ct-warning">平台高峰预警信息（2条）</div>
+						<span>疫情可视化大数据展示平台</span>
+						<div class="header-ct-warning">点击地图可进行疫情预测</div>
 					</div>
 				</div>
 				<div class="header-rg">
@@ -28,19 +28,9 @@
 							<RealTimeAccessChart ref="RealTimeAccessRef" />
 						</div>
 					</div>
-					<div class="dataScreen-center">
-						<div class="dataScreen-main-title">
-							<span>男女比例</span>
-							<img src="./images/dataScreen-title.png" alt="" />
-						</div>
-						<!-- chart区域 -->
-						<div class="dataScreen-main-chart">
-							<MaleFemaleRatioChart ref="MaleFemaleRatioRef" />
-						</div>
-					</div>
 					<div class="dataScreen-bottom">
 						<div class="dataScreen-main-title">
-							<span>年龄比例</span>
+							<span>重症病例TOP</span>
 							<img src="./images/dataScreen-title.png" alt="" />
 						</div>
 						<!-- chart区域 -->
@@ -68,21 +58,21 @@
 						</vue3-seamless-scroll> -->
 						<mapChart ref="MapchartRef" />
 					</div>
-					<div class="dataScreen-cb">
+					<!-- <div class="dataScreen-cb">
 						<div class="dataScreen-main-title">
 							<span>未来30天游客量趋势图</span>
 							<img src="./images/dataScreen-title.png" alt="" />
 						</div>
-						<!-- chart区域 -->
+					
 						<div class="dataScreen-main-chart">
 							<OverNext30Chart ref="OverNext30Ref" />
 						</div>
-					</div>
+					</div> -->
 				</div>
 				<div class="dataScreen-rg">
 					<div class="dataScreen-top">
 						<div class="dataScreen-main-title">
-							<span>热门景区排行</span>
+							<span>现有确诊top榜</span>
 							<img src="./images/dataScreen-title.png" alt="" />
 						</div>
 						<!-- chart区域 -->
@@ -90,19 +80,19 @@
 							<HotPlateChart ref="HotPlateRef" />
 						</div>
 					</div>
-					<div class="dataScreen-center">
+					<!-- <div class="dataScreen-center">
 						<div class="dataScreen-main-title">
 							<span>年度游客量对比</span>
 							<img src="./images/dataScreen-title.png" alt="" />
 						</div>
-						<!-- chart区域 -->
+			
 						<div class="dataScreen-main-chart">
 							<AnnualUseChart ref="AnnualUseRef" />
 						</div>
-					</div>
+					</div> -->
 					<div class="dataScreen-bottom">
 						<div class="dataScreen-main-title">
-							<span>预约渠道数据统计</span>
+							<span>新增治愈出院病例统计</span>
 							<img src="./images/dataScreen-title.png" alt="" />
 						</div>
 						<!-- chart区域 -->
@@ -118,17 +108,17 @@
 
 <script setup lang="ts">
 import { ref, Ref, onMounted, onBeforeUnmount } from "vue";
-import { HOME_URL } from "@/config/config";
+// import { HOME_URL } from "@/config/config";
 import { randomNum } from "@/utils/util";
-import { useRouter } from "vue-router";
+// import { useRouter } from "vue-router";
 import { useTime } from "@/hooks/useTime";
 import { ECharts } from "echarts";
 import mapChart from "./components/chinaMapChart.vue";
 import AgeRatioChart from "./components/AgeRatioChart.vue";
-import AnnualUseChart from "./components/AnnualUseChart.vue";
+// import AnnualUseChart from "./components/AnnualUseChart.vue";
 import HotPlateChart from "./components/HotPlateChart.vue";
-import MaleFemaleRatioChart from "./components/MaleFemaleRatioChart.vue";
-import OverNext30Chart from "./components/OverNext30Chart.vue";
+// import MaleFemaleRatioChart from "./components/MaleFemaleRatioChart.vue";
+// import OverNext30Chart from "./components/OverNext30Chart.vue";
 import PlatformSourceChart from "./components/PlatformSourceChart.vue";
 import RealTimeAccessChart from "./components/RealTimeAccessChart.vue";
 // import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
@@ -411,10 +401,6 @@ timer = setInterval(() => {
 }, 1000);
 
 /* 跳转home */
-const router = useRouter();
-const handleTo = () => {
-	router.push(HOME_URL);
-};
 
 /* 销毁时触发 */
 onBeforeUnmount(() => {
