@@ -1,6 +1,6 @@
 <template>
 	<!-- 实时访问 -->
-	<div class="actual-total">
+	<!-- <div class="actual-total">
 		<div class="expect-total">可预约总量<i>999999</i>人</div>
 		<div class="actual-total">
 			<div class="actual-item" v-for="(item, index) in actualTotal.split('')" :key="index">
@@ -8,189 +8,141 @@
 			</div>
 			<div class="actual-item">人</div>
 		</div>
-	</div>
+	</div> -->
 	<div class="echarts" id="RealTimeAccessChart"></div>
 </template>
 
 <script setup lang="ts">
 // Echarts 为init（dom元素后的类型）
 // EChartsOption 为 option 的类型
-import { ref, Ref } from "vue";
+// import { ref, Ref } from "vue";
 import { ECharts, init } from "echarts";
+import { watch } from "vue";
 import "echarts-liquidfill";
-const actualTotal: Ref<string> = ref("216908");
-const initChart = (data: number = 1): ECharts => {
+// const actualTotal: Ref<string> = ref("216908");
+const props = defineProps({
+	province: {
+		type: String,
+		default: () => "北京市"
+	}
+});
+const arr: any = [
+	{ name: "北京市", value: [12, 10, 11, 9, 10] },
+	{ name: "四川省", value: [11, 12, 10, 8, 11] },
+	{ name: "河北省", value: [8, 5, 7, 8, 12] },
+	{ name: "广东省", value: [12, 10, 10, 8, 9] }
+];
+let datas: any = [];
+watch(
+	[props],
+	(newVal, oldVal) => {
+		console.log(props.province);
+		for (let i = 0; i < arr.length; i++) {
+			if (props.province == arr[i].name) {
+				datas = arr[i].value;
+			}
+		}
+		console.log("新值", newVal);
+		console.log("旧值", oldVal);
+		initChart();
+	},
+	{ deep: true, immediate: true }
+);
+// watch(
+// 	() => props.province,
+// 	(newVal, oldVal) => {
+// 		console.log("新值", newVal);
+// 		console.log("旧值", oldVal);
+// 	},
+// 	{ deep: true }
+// );
+const initChart = (): ECharts => {
+	// let d1: any = {
+	// 	"黑龙江": [],
+	// 	"吉林": [],
+	// 	"辽宁": [],
+	// 	"内蒙古": [],
+	// 	"北京": [],
+	// 	"河北": [],
+	// 	"山西": [],
+	// 	"山东": [],
+	// 	"陕西": [],
+	// 	"河南": [],
+	// 	"安徽": [],
+	// 	"江苏": [],
+	// 	"湖北": [],
+	// 	"浙江": [],
+	// 	"上海": [],
+	// 	"天津": [],
+	// 	"宁夏": [],
+	// 	"甘肃": [],
+	// 	"青海": [],
+	// 	"新疆": [],
+	// 	"西藏": [],
+	// 	"云南": [],
+	// 	"四川": [],
+	// 	"重庆": [],
+	// 	"贵州": [],
+	// 	"广西": [],
+	// 	"广东": [],
+	// 	"湖南": [],
+	// 	"江西": [],
+	// 	"福建": [],
+	// 	"台湾": [],
+	// 	"海南": [],
+	// 	"香港": []
+	// };
 	const charEle = document.getElementById("RealTimeAccessChart") as HTMLElement;
 	const charEch: ECharts = init(charEle);
 	const option = {
-		title: [
-			{
-				text: (data * 100).toFixed(0) + "%",
-				left: "49%",
-				top: "35%",
-				textAlign: "center",
-				textStyle: {
-					fontSize: "14",
-					fontWeight: "normal",
-					color: "#ffffff",
-					align: "center",
-					textBorderColor: "rgba(0, 0, 0, 0)",
-					textShadowColor: "#000",
-					textShadowBlur: 0,
-					textShadowOffsetX: 0,
-					textShadowOffsetY: 1
-				}
-			},
-			{
-				text: "预约量",
-				left: "49%",
-				top: "25%",
-				textAlign: "center",
-				textStyle: {
-					fontSize: "15",
-					fontWeight: "normal",
-					color: "#ffffff",
-					align: "center",
-					textBorderColor: "rgba(0, 0, 0, 0)",
-					textShadowColor: "#000",
-					textShadowBlur: 0,
-					textShadowOffsetX: 0,
-					textShadowOffsetY: 1
-				}
-			}
-		],
+		title: {
+			text: props.province
+		},
+		tooltip: {
+			trigger: "axis"
+		},
 		grid: {
-			top: "0",
-			left: "0px",
-			right: "0px",
-			bottom: "0",
-			containLabel: true
+			top: "25%",
+			bottom: "10%" //也可设置left和right设置距离来控制图表的大小
 		},
-		polar: {
-			radius: ["75%", "85%"],
-			center: ["50%", "50%"]
-		},
-		angleAxis: {
-			max: 120,
-			clockwise: false,
-			axisLine: {
-				show: false
-			},
-			axisTick: {
-				show: false
-			},
-			axisLabel: {
-				show: false
-			},
-			splitLine: {
-				show: false
-			},
-			startAngle: 188
-		},
-		radiusAxis: {
+		xAxis: {
 			type: "category",
-			show: true,
-			axisLabel: {
-				show: false
-			},
-			axisLine: {
-				show: false
-			},
-			axisTick: {
-				show: false
-			}
+			boundaryGap: false,
+			data: ["20230201", "20230202", "20230203", "20230204", "20230205"]
+		},
+		yAxis: {
+			type: "value",
+			name: "确诊人数"
 		},
 		series: [
 			{
-				type: "liquidFill",
-				radius: "70%",
-				z: 2,
-				center: ["50%", "50%"],
-				data: [0.4, 0.4, 0.4], // data个数代表波浪数
-				itemStyle: {
-					color: {
-						type: "linear",
-						x: 0,
-						y: 0,
-						x2: 0,
-						y2: 1,
-						colorStops: [
+				name: "predict",
+				type: "line",
+				data: datas,
+				markPoint: {
+					data: [{ name: "最低", value: 10 }]
+				},
+				markLine: {
+					data: [
+						{ type: "average", name: "Avg" },
+						[
 							{
-								offset: 0,
-								color: "#35FAB6" // 0% 处的颜色
+								symbol: "none",
+								x: "90%",
+								yAxis: "max"
 							},
 							{
-								offset: 1,
-								color: "rgba(40, 209, 247,0.3)" // 100% 处的颜色
+								symbol: "circle",
+								label: {
+									position: "start",
+									formatter: "Max"
+								},
+								type: "max",
+								name: "最高点"
 							}
-						],
-						global: false // 缺省为 false
-					}
-				},
-				outline: {
-					borderDistance: 0,
-					itemStyle: {
-						borderWidth: 2,
-						borderColor: "#31d8d5",
-						shadowBlur: 20,
-						shadowColor: "#50c1a7"
-					}
-				},
-				label: {
-					show: false
-				},
-				backgroundStyle: {
-					borderWidth: 1,
-					// 径向渐变，前三个参数分别是圆心 x, y 和半径，取值同线性渐变
-					color: {
-						type: "radial",
-						x: 0.5,
-						y: 0.5,
-						r: 0.5,
-						colorStops: [
-							{
-								offset: 0,
-								color: "#0D2648" // 0% 处的颜色
-							},
-							{
-								offset: 0.8,
-								color: "#0D2648" // 100% 处的颜色
-							},
-							{
-								offset: 1,
-								color: "#228E7D" // 100% 处的颜色
-							}
-						],
-						global: false // 缺省为 false
-					}
+						]
+					]
 				}
-			},
-			{
-				type: "pie",
-				radius: ["80%", "80%"],
-				center: ["50%", "50%"],
-				z: 1,
-				label: {
-					show: false
-				},
-				silent: true,
-				itemStyle: {
-					borderWidth: 2,
-					borderType: [8, 10],
-					borderDashOffset: 15,
-					borderColor: "#31d8d5",
-					color: "#11144e",
-					borderCap: "round"
-				},
-				data: [100]
-			},
-			{
-				type: "bar",
-				data: [55],
-				z: 10,
-				coordinateSystem: "polar",
-				roundCap: true,
-				color: "#31d8d5"
 			}
 		]
 	};
@@ -245,3 +197,5 @@ defineExpose({
 	}
 }
 </style>
+
+function handleWatch() { throw new Error("Function not implemented."); }

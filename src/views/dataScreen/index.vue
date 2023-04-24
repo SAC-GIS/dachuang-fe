@@ -20,12 +20,13 @@
 				<div class="dataScreen-lf">
 					<div class="dataScreen-top">
 						<div class="dataScreen-main-title">
-							<span>实时游客统计</span>
+							<!-- 暂时只有四川\北京\河北\广东 -->
+							<span>未来5天预测</span>
 							<img src="./images/dataScreen-title.png" alt="" />
 						</div>
 						<!-- chart区域 -->
 						<div class="dataScreen-main-chart">
-							<RealTimeAccessChart ref="RealTimeAccessRef" />
+							<RealTimeAccessChart :province="province" ref="RealTimeAccessRef" />
 						</div>
 					</div>
 					<div class="dataScreen-bottom">
@@ -41,7 +42,7 @@
 				</div>
 				<div class="dataScreen-ct">
 					<div class="dataScreen-map">
-						<div class="dataScreen-map-title">景区实时客流量</div>
+						<!-- <div class="dataScreen-map-title">景区实时客流量</div> -->
 						<!-- <vue3-seamless-scroll
 							:list="alarmData"
 							class="dataScreen-alarm"
@@ -56,7 +57,7 @@
 								</div>
 							</div>
 						</vue3-seamless-scroll> -->
-						<mapChart ref="MapchartRef" />
+						<mapChart @sendProvince="sendProvince" ref="MapchartRef" />
 					</div>
 					<!-- <div class="dataScreen-cb">
 						<div class="dataScreen-main-title">
@@ -107,7 +108,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, Ref, onMounted, onBeforeUnmount, watch } from "vue";
 // import { HOME_URL } from "@/config/config";
 import { randomNum } from "@/utils/util";
 // import { useRouter } from "vue-router";
@@ -399,6 +400,24 @@ let time: Ref<string> = ref(nowTime.value);
 timer = setInterval(() => {
 	time.value = useTime().nowTime.value;
 }, 1000);
+// let province: Ref<string> = ref("北京");
+let province = ref("北京市");
+const sendProvince = (msg: any) => {
+	province.value = msg;
+	console.log(province.value);
+};
+// @Watch("province")
+// changeSearchList (val,oldVal) {
+// 	this.searchList = val
+// }
+watch(
+	[province],
+	(newVal, oldVal) => {
+		console.log("新值", newVal);
+		console.log("旧值", oldVal);
+	},
+	{ deep: true, immediate: true }
+);
 
 /* 跳转home */
 
